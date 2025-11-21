@@ -1,0 +1,1283 @@
+﻿<!--
+	
+	------------------------------------------------
+	+
+	+ WebGIS-OA
+	+
+	+ 2023 FJJ 
+	------------------------------------------------
+	OAシステムとの連携処理
+	
+	2023/03/20 初版 FJJ)Nishimura
+	2023/09/14 モード[1]の時にビットマップを取得する
+	
+	-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>WebGIS-OA</title>
+<script src="./jquery.min.js"></script>
+<!--
+	<script type="text/javascript" src="https://172.23.29.3:1443/proj/PostUtilityJSBaseFacade.js"></script>
+	<script type="text/javascript" src="https://172.23.29.3:8443/MapAPI/WebAPI.js"></script>
+-->
+<script type="text/javascript"
+	src="https://10.10.10.36:1443/proj/PostUtilityJSBaseFacade.js"></script>
+<script type="text/javascript"
+	src="https://10.10.10.36:8443/MapAPI/WebAPI.js"></script>
+<link rel="stylesheet" href="https://10.10.10.36:8443/MapAPI/WebAPI.css">
+</head>
+<style>
+/*:root { -
+	-header-bg-color: #000000;
+}
+*/
+/* メニュー部 */
+#mapPrevPane {
+	width: 50%;
+	min-height: 830px;
+	height: auto;
+	background-color: rgb(255, 255, 255);
+	margin-top: 2px;
+}
+
+#left {
+	width: 80%;
+	height: 800px;
+	float: left;
+}
+
+#right {
+	width: 20%;
+	height: 800px;
+	float: left;
+}
+
+#bottom {
+	width: 100%;
+	height: 100px;
+	float: none;
+}
+
+.btn-square {
+	width: 150px;
+	background: #668ad8;
+	color: #FFF;
+	margin-left: 10px;
+}
+</style>
+</head>
+
+<body>
+	<div id="left">
+		<div id="mapPrevPane">
+			<iframe class="mapPrevframe" id="mapPrevframe" name="mapPrevframe"
+				width="1500" height="800" src="" style="border: #000000 1px solid"></iframe>
+		</div>
+	</div>
+	<div id="right">
+		<p></p>
+		<button class="btn-square" onClick="dialog01Show()">座標検索</button>
+		<button class="btn-square" onClick="dialog02Show()">経緯度検索</button>
+		<br>
+		<button class="btn-square" onClick="dialog03Show()">住所検索</button>
+		<button class="btn-square" onClick="dialog04Show()">レイヤ合成</button>
+		<br>
+		<button class="btn-square" onClick="dialog05Show()">シンボル検索</button>
+		<button class="btn-square" onClick="dialog06Show()">警防地図番号検索</button>
+		<br>
+		<button class="btn-square" onClick="dialog07Show()">水利番号検索</button>
+		<p></p>
+		<button class="btn-square" onClick="startString()">文字作図開始</button>
+		<button class="btn-square" onClick="stopString()">文字作図終了</button>
+		<input type="text" id="str">
+		<p></p>
+		<button class="btn-square" onClick="startLine()">線作図開始</button>
+		<button class="btn-square" onClick="stopLine()">線作図終了</button>
+		<br>
+		<!-- 
+		<button class="btn-square" onClick="getPoint()">ポイント取得</button>
+		<button class="btn-square" onClick="clearPoint()">シンボルクリア</button>
+		<textarea id="point" rows="20" cols="50"></textarea>
+		<br>
+		<button class="btn-square" onClick="GetGRIB2()">GRIB2</button>
+		 -->
+	</div>
+	<div id="bottom">
+		<textarea id="msg" rows="5" cols="250"></textarea>
+	</div>
+	<!-- ダイアログ -->
+	<dialog id="dialog01">
+	<div class="dialog_title">
+		<label class="dialog_label1">座標検索</label>
+	</div>
+	<div>
+		<label class="dialog_label1">X座標(mm)</label><input type="text"
+			class="text1" id="dialog01_zx">
+	</div>
+	<div>
+		<label class="dialog_label1">Y座標(mm)</label><input type="text"
+			class="text1" id="dialog01_zy">
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog01_ok" class="dialog_btn" value="OK"
+			onClick="dialog01_ok()"> <input type="button"
+			id="dialog01_close" class="dialog_btn" value="Cancel"
+			onClick="dialog01_cancel()">
+	</div>
+	</dialog>
+	<dialog id="dialog02">
+	<div class="dialog_title">
+		<label class="dialog_label1">経緯度検索</label>
+	</div>
+	<div>
+		<label class="dialog_label1">経度</label><input type="text"
+			class="text1" id="dialog02_lon">
+	</div>
+	<div>
+		<label class="dialog_label1">緯度</label><input type="text"
+			class="text1" id="dialog02_lat">
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog02_ok" class="dialog_btn" value="OK"
+			onClick="dialog02_ok()"> <input type="button"
+			id="dialog02_close" class="dialog_btn" value="Cancel"
+			onClick="dialog02_cancel()">
+	</div>
+	</dialog>
+	<dialog id="dialog03">
+	<div class="dialog_title">
+		<label class="dialog_label1">住所検索</label>
+	</div>
+	<div>
+		<select name="dialog03_select_prif" class="select"
+			id="dialog03_select_prif" onchange="dialog03_select_prifChange()"
+			size=" 5">
+		</select>
+	</div>
+	<div>
+		<select name="dialog03_select_city" class="select"
+			id="dialog03_select_city" onchange="dialog03_select_cityChange()"
+			size="5">
+		</select>
+	</div>
+	<div>
+		<select name="dialog03_select_town1" class="select"
+			id="dialog03_select_town1" onchange="dialog03_select_town1Change()"
+			size="5">
+		</select>
+	</div>
+	<div>
+		<select name="dialog03_select_town2" class="select"
+			id="dialog03_select_town2" onchange="dialog03_select_town2Change()"
+			size="5">
+		</select>
+	</div>
+	<div>
+		地番<input type="text" class="text1" id="dialog03_num">
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog03_ok" class="dialog_btn" value="OK"
+			onClick="dialog03_ok()"> <input type="button"
+			id="dialog03_close" class="dialog_btn" value="Cancel"
+			onClick="dialog03_cancel()">
+	</div>
+	</dialog>
+	<dialog id="dialog04">
+	<div class="dialog_title">
+		<label class="dialog_label1">レイヤ合成</label>
+	</div>
+	<div>
+		<select class="select2" name="dialog04_layerlist"
+			id="dialog04_layerlist" size="20" multiple>
+		</select>
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog04_on" class="dialog_btn" value="ON"
+			onClick="dialog04_on()"> <input type="button"
+			id="dialog04_off" class="dialog_btn" value="OFF"
+			onClick="dialog04_off()"> <input type="button"
+			id="dialog04_close" class="dialog_btn" value="Cancel"
+			onClick="dialog04_cancel()">
+	</div>
+	</dialog>
+	<dialog id="dialog05">
+	<div class="dialog_title">
+		<label class="dialog_label1">シンボル一覧</label>
+	</div>
+	<div>
+		<select class="select3" name="dialog05_symbollist"
+			id="dialog05_symbollist" onchange="dialog05_symbollistChange()"
+			size="10" multiple>
+		</select>
+		<p>
+		<div>
+			<img src=null width="48px" height="48px" id="dialog05_symbolimg"></img>
+		</div>
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog05_close" class="dialog_btn"
+			value="Cancel" onClick="dialog05_cancel()">
+	</div>
+	</dialog>
+	<dialog id="dialog06">
+	<div class="dialog_title">
+		<label class="dialog_label1">警防地図番号検索</label>
+	</div>
+	<div>
+		<label class="dialog_label1">X</label><input type="text" class="text1"
+			id="dialog06_number_x"><br> <label class="dialog_label1">Y</label><input
+			type="text" class="text1" id="dialog06_number_y">
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog06_ok" class="dialog_btn" value="OK"
+			onClick="dialog06_ok()"> <input type="button"
+			id="dialog06_close" class="dialog_btn" value="Cancel"
+			onClick="dialog06_cancel()">
+	</div>
+	</dialog>
+	<dialog id="dialog07">
+	<div class="dialog_title">
+		<label class="dialog_label1">水利番号検索</label>
+	</div>
+	<div>
+		<label class="dialog_label1">水利番号</label><input type="text"
+			class="text1" id="dialog07_number">
+	</div>
+	<div>
+		<select class="select2" name="dialog07_infolist"
+			id="dialog07_infolist" size="10" multiple>
+		</select>
+	</div>
+	<div class="btn_function">
+		<input type="button" id="dialog07_ok" class="dialog_btn" value="OK"
+			onClick="dialog07_ok()"> <input type="button"
+			id="dialog07_close" class="dialog_btn" value="Cancel"
+			onClick="dialog07_cancel()">
+	</div>
+	</dialog>
+
+	<script>
+
+		var IsGetPoint = false;
+		var EditString = false;
+		var EditLine = false;
+		
+		var EditPoint = [];
+
+		//-----------------------------------------------------------------------
+		//[初期処理]
+		//-----------------------------------------------------------------------
+		window.document.addEventListener("DOMContentLoaded", function () {
+		});
+
+		//-----------------------------------------------------------------------
+		//[on load処理]
+		//-----------------------------------------------------------------------
+		window.onload = function () {
+			//			var x = -45237600;
+			//			var y = -150372500;
+			var x = -34661225;
+			var y = -128280581;
+
+			var zoom = 16;
+
+			MapObj.setjsonload(false);
+
+			var queryString = window.location.search;
+			if (queryString.length == 0) {
+				console.log("引数なし");
+				MapObj.init2(x, y, zoom);
+			} else {
+				const params = new URLSearchParams(queryString);
+
+				var zx = params.get('zx');
+				var zy = params.get('zy');
+
+				var retval = new Array(); //座標変換用
+				LonLatW2PRAn(zx, zy, 6, retval);
+
+				x = retval[0];
+				y = retval[1];
+				MapObj.init2(x, y, zoom);
+
+				var lay = params.get('lay');
+				if (lay == null) {
+
+				} else {
+					if (lay.length > 0) {
+						console.log("レイヤ合成" + lay);
+						MapObj.changeVisibleLayer(lay, true, function (ret) { });
+					}
+				}
+
+			}
+			//イベントリスナー登録
+			MapObj.addListener("singleSnap", "eventId1", singleSnap_Func);
+			//MapObj.addListener("longPress", "eventId2", longPress_Func);
+			MapObj.addListener("rightClicked", "eventId3", rightClicked_Func);
+			//MapObj.addListener("changeView", "eventId4", changeView_Func);
+		}
+		function getPoint() {
+
+			IsGetPoint = true;
+			document.getElementById("point").value = "";
+		}
+
+		function clearPoint() {
+			IsGetPoint = false;
+			document.getElementById("point").value = "";
+			var layerId = "28";
+			MapObj.refreshLayer(layerId, function (ret) { });
+		}
+
+		//--------------------------------------------------------------------------------------------------------------------
+		function send2() {
+			// WebSocket接続の確立
+			socket = new WebSocket("ws://localhost:8080/");
+			socket.addEventListener('open', (event) => {
+				// サーバーにメッセージを送信
+
+				let pointinfo = {};
+
+				pointinfo.strCode = document.getElementById("strCode").value;              //機能コード
+				pointinfo.strIraiNo = document.getElementById("strIraiNo").value;            //依頼番号
+				pointinfo.strRetCode = document.getElementById("strRetCode").value;           //応答
+				pointinfo.strScale = document.getElementById("strScale").value;             //地図縮尺
+				pointinfo.strPosX = document.getElementById("strPosX").value;              //地図座標Ｘ
+				pointinfo.strPosY = document.getElementById("strPosY").value;              //地図座標Ｙ
+				pointinfo.strKenCode = document.getElementById("strKenCode").value;           //県コード
+				pointinfo.strKenName = document.getElementById("strKenName").value;           //県名称
+				pointinfo.strSiCode = document.getElementById("strSiCode").value;            //市町村コード
+				pointinfo.strSiName = document.getElementById("strSiName").value;            //市町村名称
+				pointinfo.strAzaCode = document.getElementById("strAzaCode").value;           //大字コード
+				pointinfo.strAzaName = document.getElementById("strAzaName").value;           //大字名称
+				pointinfo.strTyoCode = document.getElementById("strTyoCode").value;           //丁目コード
+				pointinfo.strTyoName = document.getElementById("strTyoName").value;           //丁目名称
+				pointinfo.strBanti = document.getElementById("strBanti").value;             //番地
+				pointinfo.strGou = document.getElementById("strGou").value;               //号
+
+				socket.send(JSON.stringify(pointinfo));
+
+				socket.close();
+
+			});
+			// メッセージを受信したときのイベント
+			socket.addEventListener('message', (event) => {
+				console.log('サーバーからのメッセージ:', event.data);
+			});
+
+			// エラーが発生したときのイベント
+			socket.addEventListener('error', (event) => {
+				console.error('WebSocketエラーが発生しました:', event);
+			});
+
+			// 接続が閉じられたときのイベント
+			socket.addEventListener('close', (event) => {
+				console.log('WebSocket接続が閉じられました');
+			});
+
+
+			close();
+		}
+		//--------------------------------------------------------------------------------------------------------------------
+
+		function singleSnap_Func(ret) {
+			console.log(ret);
+
+			var msg = "";
+
+			msg += "X座標[";
+			msg += ret.lon;
+			msg += "],Y座標[";
+			msg += ret.lat;
+			msg += "]";
+
+			var retval = new Array(); //座標変換用
+			PRAn2LonLatW(ret.lon, ret.lat, 6, retval);
+
+			msg += " 経度[";
+			msg += retval[0];
+			msg += "],緯度[";
+			msg += retval[1];
+			msg += "]";
+
+			document.getElementById("msg").value = msg;
+
+
+			if (IsGetPoint == true) {
+
+				var text = document.getElementById("point").value;
+
+				text += retval[0];
+				text += ","
+				text += retval[1]
+				text += "\r\n";
+
+				document.getElementById("point").value = text;
+				var layerId = "28";
+
+				let data = [];
+
+				var info = {};
+				var pt = {};
+				var attr = {};
+
+				pt["lon"] = ret.lon;
+				pt["lat"] = ret.lat;
+
+				attr["SYMBOLID"] = "1001";
+				info["drawMode"] = 1;
+				info["pt"] = pt;
+				info["attribute"] = attr;
+
+				data.push(info);
+				var json = JSON.stringify(data);
+				MapObj.drawPoints(
+					layerId,
+					json,
+					function (ret) {
+					}
+				);
+			}
+			
+			if(EditString == true){
+				
+				var str = document.getElementById("str").value; 
+				drawText(retval[0],retval[1],str)
+			}
+			
+			if(EditLine == true){
+
+				var pos={};
+				
+				pos.lon = retval[0];
+				pos.lat = retval[1];
+				EditPoint.push(pos);
+				
+				
+				console.log(EditPoint);
+				drawLine();
+			}
+			
+		}
+
+		function rightClicked_Func(ret) {
+			console.log(ret);
+		}
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理1]
+		//-----------------------------------------------------------------------
+		function dialog01Show() {
+			var dialog01 = document.getElementById("dialog01");
+			document.getElementById('dialog01_zx').value = -45237600;
+			document.getElementById('dialog01_zy').value = -150372500;
+			dialog01.showModal();
+		}
+		function dialog01_ok() {
+			var dialog01 = document.getElementById("dialog01");
+			var x = document.getElementById('dialog01_zx').value;
+			var y = document.getElementById('dialog01_zy').value;
+
+			dialog01.close();
+
+			MapObj.setPosition({
+				lat: y,
+				lon: x,
+			}, true, function (ret) {
+				console.log(ret);
+				MsgOut(ret.result);
+			});
+
+			
+			
+		}
+		function dialog01_cancel() {
+			var dialog01 = document.getElementById("dialog01");
+			dialog01.close();
+		}
+
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理2]
+		//-----------------------------------------------------------------------
+		function dialog02Show() {
+			var dialog02 = document.getElementById("dialog02");
+			document.getElementById('dialog02_lon').value = 135.61977609305399;
+			document.getElementById('dialog02_lat').value = 34.84510406118968;
+			dialog02.showModal();
+			
+
+		}
+		function dialog02_ok() {
+			var dialog02 = document.getElementById("dialog02");
+			var x = document.getElementById('dialog02_lon').value;
+			var y = document.getElementById('dialog02_lat').value;
+
+			dialog02.close();
+
+			var retval = new Array();
+
+			LonLatW2PRAn(x, y, 6, retval);
+
+			MapObj.setPosition({
+				lat: retval[1],
+				lon: retval[0],
+			}, true, function (ret) {
+				console.log(ret);
+				MsgOut(ret.result);
+			});
+
+			drawText();
+		}
+		function dialog02_cancel() {
+			var dialog02 = document.getElementById("dialog02");
+			dialog02.close();
+		}
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理3]
+		//-----------------------------------------------------------------------
+		function dialog03Show() {
+			var dialog03 = document.getElementById("dialog03");
+			var dialog03_select_prif = document.getElementById("dialog03_select_prif");
+			var dialog03_select_city = document.getElementById("dialog03_select_city");
+			var dialog03_select_town1 = document.getElementById("dialog03_select_town1");
+			var dialog03_select_town2 = document.getElementById("dialog03_select_town2");
+
+			while (dialog03_select_prif.firstChild) {
+				dialog03_select_prif.removeChild(dialog03_select_prif.firstChild)
+			}
+			while (dialog03_select_city.firstChild) {
+				dialog03_select_city.removeChild(dialog03_select_city.firstChild)
+			}
+			while (dialog03_select_town1.firstChild) {
+				dialog03_select_town1.removeChild(dialog03_select_town1.firstChild)
+			}
+			while (dialog03_select_town2.firstChild) {
+				dialog03_select_town2.removeChild(dialog03_select_town2.firstChild)
+			}
+
+
+			prif = 0;
+			city = 0;
+			town1 = 0;
+			town2 = 0;
+
+			let = MapObj.getAddrList(prif, city, town1, town2);
+
+			var obj = JSON.parse(let.data);
+			var info = "";
+			for (i = 0; i < obj.length; i++) {
+
+				const option = document.createElement('option'); //option要素を新しく作る
+				option.innerHTML = obj[i].name;
+				option.value = obj[i].id;
+				dialog03_select_prif.appendChild(option); //セレクトボックスにoption要素を追加する
+			}
+			dialog03.showModal();
+		}
+		function dialog03_ok() {
+			var dialog03 = document.getElementById("dialog03");
+			//prif = document.getElementById("dialog03_select_prif").value;
+			//city = document.getElementById("dialog03_select_city").value;
+			//town1 = document.getElementById("dialog03_select_town1").value;
+			//town2 = document.getElementById("dialog03_select_town2").value;
+			//num = document.getElementById("dialog03_num").value;
+
+			//2023.06.13 
+			var prif_val = document.getElementById("dialog03_select_prif").value;
+			var city_val = document.getElementById("dialog03_select_city").value;
+			var town1_val = document.getElementById("dialog03_select_town1").value;
+			var town2_val = document.getElementById("dialog03_select_town2").value;
+			var num_val = document.getElementById("dialog03_num").value;
+
+			if (prif_val.length > 0) {
+				prif = prif_val;
+			} else {
+				prif = 0;
+			}
+			if (city_val.length > 0) {
+				city = city_val;
+			} else {
+				city = 0;
+			}
+			if (town1_val.length > 0) {
+				town1 = town1_val;
+			} else {
+				town1 = 0;
+			}
+			if (town2_val.length > 0) {
+				town2 = town2_val;
+			} else {
+				town2 = 0;
+			}
+			if (num_val.length > 0) {
+				num = num_val;
+			} else {
+				num = "";
+			}
+
+			let = MapObj.getAddrPoint(prif, city, town1, town2, num);
+
+			console.log(let);
+
+			var zoomlevel = 13;
+			if (town1 == 0) {
+				zoomlevel = 13;
+			} else {
+				zoomlevel = 16;
+			}
+
+			MapObj.setScale(
+				zoomlevel,
+				false,
+				function (ret) {
+					console.log(ret);
+				}
+			);
+
+			MapObj.setPosition({
+				lat: let.value.lat,
+				lon: let.value.lon,
+			}, true, function (ret) {
+				console.log(ret);
+				MsgOut(ret.result);
+			});
+
+			//dialog03.close();
+		}
+		function dialog03_cancel() {
+			var dialog03 = document.getElementById("dialog03");
+			dialog03.close();
+		}
+		function dialog03_select_prifChange() {
+
+			var dialog03 = document.getElementById("dialog03");
+			var dialog03_select_city = document.getElementById("dialog03_select_city");
+			var dialog03_select_town1 = document.getElementById("dialog03_select_town1");
+			var dialog03_select_town2 = document.getElementById("dialog03_select_town2");
+
+			while (dialog03_select_city.firstChild) {
+				dialog03_select_city.removeChild(dialog03_select_city.firstChild)
+			}
+			while (dialog03_select_town1.firstChild) {
+				dialog03_select_town1.removeChild(dialog03_select_town1.firstChild)
+			}
+			while (dialog03_select_town2.firstChild) {
+				dialog03_select_town2.removeChild(dialog03_select_town2.firstChild)
+			}
+
+			prif = document.getElementById("dialog03_select_prif").value;
+			city = 0;
+			town1 = 0;
+			town2 = 0;
+
+			let = MapObj.getAddrList(prif, city, town1, town2);
+
+			var obj = JSON.parse(let.data);
+			var info = "";
+			for (i = 0; i < obj.length; i++) {
+
+				const option = document.createElement('option');
+				option.innerHTML = obj[i].name;
+				option.value = obj[i].id;
+				dialog03_select_city.appendChild(option);
+			}
+		}
+		function dialog03_select_cityChange() {
+
+			var dialog03 = document.getElementById("dialog03");
+			var dialog03_select_town1 = document.getElementById("dialog03_select_town1");
+			var dialog03_select_town2 = document.getElementById("dialog03_select_town2");
+
+			while (dialog03_select_town1.firstChild) {
+				dialog03_select_town1.removeChild(dialog03_select_town1.firstChild)
+			}
+			while (dialog03_select_town2.firstChild) {
+				dialog03_select_town2.removeChild(dialog03_select_town2.firstChild)
+			}
+
+			prif = document.getElementById("dialog03_select_prif").value;
+			city = document.getElementById("dialog03_select_city").value;
+			town1 = 0;
+			town2 = 0;
+
+			let = MapObj.getAddrList(prif, city, town1, town2);
+
+			var obj = JSON.parse(let.data);
+			var info = "";
+			for (i = 0; i < obj.length; i++) {
+
+				const option = document.createElement('option');
+				option.innerHTML = obj[i].name;
+				option.value = obj[i].id;
+				dialog03_select_town1.appendChild(option);
+			}
+		}
+		function dialog03_select_town1Change() {
+
+			var dialog03 = document.getElementById("dialog03");
+			var dialog03_select_town2 = document.getElementById("dialog03_select_town2");
+
+			while (dialog03_select_town2.firstChild) {
+				dialog03_select_town2.removeChild(dialog03_select_town2.firstChild)
+			}
+
+			prif = document.getElementById("dialog03_select_prif").value;
+			city = document.getElementById("dialog03_select_city").value;
+			town1 = document.getElementById("dialog03_select_town1").value;
+			town2 = 0;
+
+			let = MapObj.getAddrList(prif, city, town1, town2);
+
+			var obj = JSON.parse(let.data);
+			var info = "";
+			for (i = 0; i < obj.length; i++) {
+
+				const option = document.createElement('option');
+				option.innerHTML = obj[i].name;
+				option.value = obj[i].id;
+				dialog03_select_town2.appendChild(option);
+			}
+		}
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理4]
+		//-----------------------------------------------------------------------
+		function dialog04Show() {
+			var dialog04 = document.getElementById("dialog04");
+			var dialog04_layerlist = document.getElementById("dialog04_layerlist");
+
+			while (dialog04_layerlist.firstChild) {
+				dialog04_layerlist.removeChild(dialog04_layerlist.firstChild)
+			}
+			MapObj.getVisibleLayerList(
+				function (ret) {
+					for (var i = 0; i < ret.value.length; i++) {
+						const option = document.createElement('option'); //option要素を新しく作る
+						option.innerHTML = ret.value[i].id + ":" + ret.value[i].name + ":" + ret.value[i].display;
+						option.value = ret.value[i].id;
+						dialog04_layerlist.appendChild(option); //セレクトボックスにoption要素を追加する
+					}
+					MsgOut(ret.result);
+				}
+			);
+			dialog04.showModal();
+		}
+
+		function dialog04_on() {
+			var dialog04 = document.getElementById("dialog04");
+			var dialog04_layerlist = document.getElementById("dialog04_layerlist");
+			var layerId = document.getElementById("dialog04_layerlist").value;
+			console.log(layerId);
+			var mode = true;
+			MapObj.changeVisibleLayer(
+				layerId,
+				mode,
+				function (ret) {
+					while (dialog04_layerlist.firstChild) {
+						dialog04_layerlist.removeChild(dialog04_layerlist.firstChild)
+					}
+					MapObj.getVisibleLayerList(
+						function (ret) {
+							for (var i = 0; i < ret.value.length; i++) {
+								const option = document.createElement('option');
+								option.innerHTML = ret.value[i].id + ":" + ret.value[i].name + ":" + ret.value[i].display;
+								option.value = ret.value[i].id;
+								dialog04_layerlist.appendChild(option);
+							}
+							MsgOut(ret.result);
+						}
+					);
+
+				}
+			);
+		}
+		function dialog04_off() {
+			var dialog04 = document.getElementById("dialog04");
+			var dialog04_layerlist = document.getElementById("dialog04_layerlist");
+			var layerId = document.getElementById("dialog04_layerlist").value;
+			console.log(layerId);
+			var mode = false;
+			MapObj.changeVisibleLayer(
+				layerId,
+				mode,
+				function (ret) {
+					while (dialog04_layerlist.firstChild) {
+						dialog04_layerlist.removeChild(dialog04_layerlist.firstChild)
+					}
+					MapObj.getVisibleLayerList(
+						function (ret) {
+							for (var i = 0; i < ret.value.length; i++) {
+								const option = document.createElement('option'); //option要素を新しく作る
+								option.innerHTML = ret.value[i].id + ":" + ret.value[i].name + ":" + ret.value[i].display;
+								option.value = ret.value[i].id;
+								dialog04_layerlist.appendChild(option); //セレクトボックスにoption要素を追加する
+							}
+							MsgOut(ret.result);
+						}
+					);
+
+				}
+			);
+		}
+		function dialog04_cancel() {
+			var dialog04 = document.getElementById("dialog04");
+			dialog04.close();
+		}
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理5]
+		//-----------------------------------------------------------------------
+		function dialog05Show() {
+
+			var xhr = new XMLHttpRequest();
+
+			var url = "https://" + GIS_SERVER_IP + ":8443/Sample/GetSymbolList";
+
+			xhr.open("GET", url);
+			xhr.send();
+
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					var json = xhr.responseText;
+
+					console.log(json);
+					res = JSON.parse(json);
+
+					var len = res.data.length;
+
+					console.log("len=" + len);
+
+					var data = [];
+
+					while (dialog05_symbollist.firstChild) {
+						dialog05_symbollist.removeChild(dialog05_symbollist.firstChild)
+					}
+
+
+					for (var i = 0; i < len; i++) {
+						const option = document.createElement('option'); //
+						option.innerHTML = res.data[i].symbol_id + " " + res.data[i].name1;
+//						option.value = res.data[i].symbol_id;
+						option.value = res.data[i].iconpath;
+						dialog05_symbollist.appendChild(option); //
+					}
+					dialog05.showModal();
+				}
+			}
+		}
+
+		function dialog05_cancel() {
+			var dialog05 = document.getElementById("dialog05");
+			dialog05.close();
+		}
+		function dialog05_symbollistChange() {
+
+			var dialog05 = document.getElementById("dialog05");
+			var dialog05_symbollist = document.getElementById("dialog05_symbollist");
+			var dialog05_symbolimg = document.getElementById("dialog05_symbolimg");
+
+			var symbol_id = document.getElementById("dialog05_symbollist").value;
+
+			var iconpath = "https://" + GIS_SERVER_IP + ":8443/upload/png/" + symbol_id;
+
+			dialog05_symbolimg.src = iconpath;
+
+		}
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理6]
+		//-----------------------------------------------------------------------
+		function dialog06Show() {
+			var dialog06 = document.getElementById("dialog06");
+			document.getElementById('dialog06_number_x').value = 19;
+			document.getElementById('dialog06_number_y').value = 18;
+			dialog06.showModal();
+		}
+		function dialog06_ok() {
+			var dialog06 = document.getElementById("dialog06");
+			var number_x = document.getElementById('dialog06_number_x').value;
+			var number_y = document.getElementById('dialog06_number_y').value;
+
+			dialog06.close();
+
+			var mapno = parseInt(number_x) * 100 + parseInt(number_y);
+
+			console.log(mapno);
+
+			MapObj.mapNumberToPosition(
+				mapno,
+
+				function (ret) {
+
+
+					console.log(ret);
+					if (ret.result == "success") {
+
+						MapObj.setPosition({
+							lat: ret.data.cy,
+							lon: ret.data.cx,
+						}, true, function (ret) {
+							console.log(ret);
+							MsgOut(ret.result);
+						});
+
+					} else {
+						ShowGuide(ret.message)
+					}
+				}
+
+			);
+			/*
+			
+			mapNumberToPosition({
+				mapno,
+				function(ret){
+					MapObj.setPosition({
+						lat:  ret.data.cy,
+						lon:  ret.data.cx,
+					}, true, function (ret) {
+						console.log(ret);
+						MsgOut(ret.result);
+					});
+				}
+			});
+			*/
+			//			var retval = new Array();
+			//			LonLatW2PRAn(x, y, 6, retval);
+
+		}
+		function dialog06_cancel() {
+			var dialog06 = document.getElementById("dialog06");
+			dialog06.close();
+		}
+		//-----------------------------------------------------------------------
+		//[ダイアログ処理7]
+		//-----------------------------------------------------------------------
+		function dialog07Show() {
+			var dialog07 = document.getElementById("dialog07");
+			document.getElementById('dialog07_number').value = "11M127H 733";
+			dialog07.showModal();
+		}
+		function dialog07_ok() {
+			var dialog07 = document.getElementById("dialog07");
+			var number = document.getElementById('dialog07_number').value;
+
+			var url = "https://" + GIS_SERVER_IP + ":8443/Sample/GetWaterInfo";
+			url += "?";
+			url += "number=";
+			url += number;
+
+			console.log(url);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", url);
+			xhr.send();
+
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					var json = xhr.responseText;
+
+					console.log(json);
+					res = JSON.parse(json);
+
+					if (res.result = "OK") {
+						var x = res.izahyo_x;
+						var y = res.izahyo_y;
+
+						MapObj.setPosition({
+							lat: y,
+							lon: x,
+						}, true, function (ret) {
+							MsgOut(ret.result);
+						});
+
+						var data = [];
+
+						data[0] = "水利番号:" + res.suiri_cd;
+						data[1] = "水利種別:" + res.suiri_sbt;
+						data[2] = "シンボル種別:" + res.symbol_sbt;
+						data[3] = "使用可否:" + res.shiyo_kahi;
+						data[4] = "配管口径:" + res.haikan_kokei;
+						data[5] = "文字:" + res.moji;
+						data[6] = "座標X:" + res.izahyo_x;
+						data[7] = "座標Y:" + res.izahyo_y;
+						data[8] = "構造B:" + res.kozo_b;
+						data[9] = "作成区分:" + res.make_kbn;
+
+						while (dialog07_infolist.firstChild) {
+							dialog07_infolist.removeChild(dialog07_infolist.firstChild)
+						}
+						for (var i = 0; i < data.length; i++) {
+							const option = document.createElement('option'); //
+							option.innerHTML = data[i];
+							dialog07_infolist.appendChild(option);
+						}
+						/*	
+						private String suiri_cd;
+						private int suiri_sbt;
+						private int symbol_sbt;
+						private int shiyo_kahi;
+						private int haikan_kokei;
+						private String moji;
+						private int izahyo_x;
+						private int izahyo_y;
+						private int kozo_b;
+						*/
+					}
+
+					/*
+					var data = [];
+	
+					while (dialog05_symbollist.firstChild) {
+						dialog05_symbollist.removeChild(dialog05_symbollist.firstChild)
+					}
+	
+	
+					for (var i = 0; i < len; i++) {
+						const option = document.createElement('option'); //
+						option.innerHTML = res.data[i].symbol_id + " " + res.data[i].name1;
+						option.value = res.data[i].symbol_id;
+						dialog05_symbollist.appendChild(option); //
+					}
+					*/
+				}
+			}
+
+
+			//dialog07.close();
+
+		}
+		function dialog07_cancel() {
+			var dialog07 = document.getElementById("dialog07");
+			dialog07.close();
+		}
+
+		function mapNumberToPosition(mapno, callback) {
+			var ret = {};
+
+			var orgx = -57750; //原点X
+			var orgy = -136500; //原点Y
+			var w = 750;
+			var h = 500;
+
+			var x = parseInt(mapno / 100);
+			var y = mapno % 100;
+
+			var ret = {};
+			ret.methodName = "mapNumberToPosition";
+
+			if (x > 0 && y > 0 && x < 100 && y < 100) {
+				var zx0 = orgx + x * w;
+				var zy0 = orgy - y * h;
+				var zx1 = orgx + (x + 1) * w;
+				var zy1 = orgy - (y + 1) * h;
+
+				var cx = (zx0 + zx1) / 2;
+				var cy = (zy0 + zy1) / 2;
+
+				ret.result = "success";
+
+				var data = {};
+
+				//単位をmmにする
+				data.lux = zx0 * 1000;
+				data.luy = zy0 * 1000;
+				data.rdx = zx1 * 1000;
+				data.rdy = zy1 * 1000;
+				data.cx = cx * 1000;
+				data.cy = cy * 1000;
+
+				ret.data = data;
+				callback(ret);
+			} else {
+				ret.result = "error";
+				ret.message = "指定地図番号が不当です";
+				callback(ret);
+			}
+		}
+
+		//-----------------------------------------------------------------------
+		//[座標指定]
+		//-----------------------------------------------------------------------
+		function setPosition() {
+
+			var x = document.getElementById("zx").value;
+			var y = document.getElementById("zy").value;
+
+			MapObj.setPosition({
+				lat: y,
+				lon: x,
+			}, true, function (ret) {
+				MsgOut(ret.result);
+			});
+
+		}
+		//-----------------------------------------------------------------------
+		//[拡大]
+		//-----------------------------------------------------------------------
+		function onBtnZoomIn() {
+
+			MapObj.getScale(
+				function (ret) {
+
+					console.log(ret);
+
+					var zoomLevel = ret.value + 1;
+
+					m_scale = zoomLevel;
+
+					MapObj.setScale(
+						zoomLevel,
+						false,
+						function (ret) {
+							console.log(ret);
+						}
+					);
+				}
+			);
+
+		}
+		//-----------------------------------------------------------------------
+		//[縮小]
+		//-----------------------------------------------------------------------
+		function onBtnZoomOut() {
+
+			MapObj.getScale(
+				function (ret) {
+
+					console.log(ret);
+
+					var zoomLevel = ret.value - 1;
+
+					m_scale = zoomLevel;
+
+					MapObj.setScale(
+						zoomLevel,
+						false,
+						function (ret) {
+							console.log(ret);
+						}
+					);
+				}
+			);
+
+		}
+		
+		function startString(){
+			
+			EditString = true;
+			
+		}
+		function stopString(){
+
+			EditString = false;
+			var layerId ="n@35-1";
+			facade.refreshLayer(layerId, function (ret) {});
+		}
+		function startLine(){
+			
+			EditLine = true;
+			
+		}
+		function stopLine(){
+
+			EditLine = false;
+			var layerId ="n@35-1";
+			facade.refreshLayer(layerId, function (ret) {});
+		}
+		
+		
+		function drawText(x,y,str) {
+
+			var layerId ="n@35-1";
+			
+			let data = [];
+
+			var attr = {};
+
+			var info = {};
+			var attr = {};
+
+	      info.wkt = "POINT (" + x + " " + y + ")";
+
+			attr["TEXT"] = str;
+
+
+		      info.attributes = attr;
+		      data.push(info);
+		      
+		      console.log(info);
+			
+		    facade.drawItems(
+		    	      layerId,
+		    	      data, //JSONにせずに渡す
+		    	      function (ret) {
+		    	        console.log(ret);
+		    	        callback(ret);
+		    	      }
+		    	    );
+
+
+		}
+		
+		function drawLine(){
+			
+			
+		    var data = [];
+
+		    //for (var i = 0; i < EditPoint.length; i++) {
+		      var info = {};
+
+		      info.wkt = "LINESTRING(";
+
+		      for (var j = 0; j < EditPoint.length; j++) {
+
+		    	  if (j > 0) {
+		          info.wkt += ", ";
+		        }
+		        info.wkt += EditPoint[i].lon + " " + EditPoint[i].lat;
+		      }
+		      info.wkt += ")";
+		      console.log(info.wkt);
+
+		      //2022.12.07
+		      //var str = JSON.stringify(param[i].attribute);
+		      //str = str.replace("SYMBOLID", "シンボル種別");
+		      
+		      
+		      var attr = {};
+		      attr["シンボル種別"] = 1;
+		      
+		      info.attributes = attr;
+		      //      info.attributes = param[i].attribute;
+
+		      data.push(info);
+		  //  }
+
+	//	    console.log("layerId=" + layerId);
+
+//		    layerId = ChangeLay2(layerId);
+
+		    facade.drawItems(
+		      layerId,
+		      data, //JSONにせずに渡す
+		      function (ret) {
+		        console.log(ret);
+		        callback(ret);
+		      }
+		    );
+			
+			
+			
+		}
+
+		function MsgOut(msg) {
+			$("#msg").html(msg);
+		}
+
+		
+
+	</script>
+</body>
+
+</html>
