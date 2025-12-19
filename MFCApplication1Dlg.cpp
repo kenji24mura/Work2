@@ -102,6 +102,8 @@ BOOL CMFCApplication1Dlg::OnInitDialog()
 
 	// TODO: 初期化をここに追加します。
 
+	GetDlgItem(IDC_EDIT4)->SetWindowTextA("0");
+
 	return TRUE;  // フォーカスをコントロールに設定した場合を除き、TRUE を返します。
 }
 
@@ -161,20 +163,29 @@ void CMFCApplication1Dlg::OnBnClickedOk()
 	// 
 	// 
 	// 
-	int angle = 45;
+
+	CString strRate;
+
+	GetDlgItem(IDC_EDIT4)->GetWindowTextA(strRate);
+
+	int strHeight = 40;
+
+	int angle = atoi(strRate);
 	// LOGFONT 構造体を初期化
 	LOGFONT lf = { 0 };
-	lf.lfHeight = 40; // フォント高さ
+	lf.lfHeight = strHeight; // フォント高さ
 	lf.lfEscapement = angle * 10; // 1/10度単位で指定
 	lf.lfOrientation = angle * 10;
-	_tcscpy_s(lf.lfFaceName, _T("Arial")); // フォント名
+	_tcscpy_s(lf.lfFaceName, _T("Meiryo UI")); // フォント名
 
 
 	CDC* pDC = GetDlgItem(IDC_PICT1)->GetDC();
 
+	double rad = (double)angle * 3.14/180;
+
 	CString wbuf[10];
 
-	CString str = "富士通　BBBB　　CCCC";
+	CString str = "AAA　BBBB　CCCC";
 
 	boolean IsCont = true;
 
@@ -196,6 +207,7 @@ void CMFCApplication1Dlg::OnBnClickedOk()
 	}
 	if (start < str.GetLength()) {
 		wbuf[k] = str.Mid(start);
+		k++;
 	}
 
 	// 回転フォント作成
@@ -204,15 +216,28 @@ void CMFCApplication1Dlg::OnBnClickedOk()
 
 	pDC->SelectObject(Font);
 
-	pDC->TextOut(100, 100, "ABC");
 
+	for (int i = 0; i < k; i++) {
+
+
+		double r = sin(rad);
+
+		int x = 100 + strHeight*sin(rad) *i;
+		int y = 100 + strHeight * i;
+
+		pDC->TextOut(x, y, wbuf[i]);
+
+	}
+
+
+	/*
 	CRect r;
 	r.left = 0;
 	r.top = 0;
 	r.right = 100;
 	r.bottom = 100;
-
 	pDC->DrawText("aaa\r\nssss", r,DT_LEFT);
+	*/
 
 	//CDialogEx::OnOK();
 }
