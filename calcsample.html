@@ -1,0 +1,87 @@
+<html>
+<div>
+    <input type="text" id="x1" value="10"><input type="text" id="y1" value="20"><br>
+    <input type="text" id="x2" value="20"><input type="text" id="y2" value="20"><br>
+    <input type="text" id="x3" value="20"><input type="text" id="y3" value="10"><br>
+    <button id="calc" value="calc" onClick="Calc()">面積計測</button><br>
+    結果<input type="text" id="id1">
+</div>
+<script>
+
+    function Calc() {
+        var points = [];
+        var point = {};
+
+        point.lon = parseInt(document.getElementById("x1").value);
+        point.lat = parseInt(document.getElementById("y1").value);
+
+        points.push(point);
+
+        point = {};
+        point.lon = parseInt(document.getElementById("x2").value);
+        point.lat = parseInt(document.getElementById("y2").value);
+        points.push(point);
+
+        point = {};
+        point.lon = parseInt(document.getElementById("x3").value);
+        point.lat = parseInt(document.getElementById("y3").value);
+        points.push(point);
+
+        console.log(points);
+
+        //obj->json
+
+        let jsondata = JSON.stringify(points);
+
+        let ret = getpolygonArea(jsondata);
+
+        console.log(ret);
+
+        document.getElementById("id1").value = ret.message+"["+ret.data+"]";
+    }
+
+    //
+    //面積算出
+    //
+    function getpolygonArea(jsondata) {
+        const ret = {};
+
+        //json->obj
+        var points = JSON.parse(jsondata);
+
+        let sum = 0;
+        var n = points.length;
+
+        if (n < 3) {
+            ret.data = -1;
+            ret.result = "error";
+            ret.message = "頂点が不足しています。";
+            return ret;
+        }
+
+        for (let i = 0; i < n; i++) {
+            const { lon: x1, lat: y1 } = points[i];
+            const { lon: x2, lat: y2 } = points[(i + 1) % n]; // 次の頂点（最後は最初に戻る）
+
+            // 入力チェック
+            if (typeof x1 !== "number" || typeof y1 !== "number" ||
+                typeof x2 !== "number" || typeof y2 !== "number") {
+
+                ret.data = -1;
+                ret.result = "error";
+                ret.message = "座標の値が不当です。";
+                return ret;
+            }
+
+            sum += (x1 * y2) - (x2 * y1);
+        }
+        ret.data = Math.abs(sum) / 2;
+        ret.result = "success";
+        ret.message = "正常に終了しました。";
+        return ret;
+
+    }
+
+</script>
+
+</html>
