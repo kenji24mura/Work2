@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html>
+<style>
+  body {
+    background-color: #808080;
+  }
+
+  .login_form {
+    width: 600px;
+    padding: 40px 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: aliceblue;
+    text-align: center;
+  }
+
+  .login_form h1,
+  .login_form p {
+    color: gray;
+    font-weight: 500;
+  }
+
+  .login_form p {
+    font-size: 10px;
+  }
+
+  .input {
+    width: 300px;
+    background: white;
+    font-size: 18px;
+  }
+
+  .btn {
+    width: 200px;
+    position: relative;
+    display: inline-block;
+    background: lawngreen;
+    color: magenta;
+    border-radius: 4px;
+    font-size: 20px;
+  }
+</style>
+
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <script type="text/javascript" language="javascript">
+
+    window.onload = function getLink() {
+      var host = location.hostname;
+
+      var jsbaseUrl = "https://" + host + ":1443/proj/login.html";
+      var jsBaseTag = document.getElementById("jsbaseLink");
+      var jsBaseLink = jsBaseTag.firstChild.nodeValue;
+      var jsBaseATag = document.createElement("a");
+      jsBaseATag.href = jsbaseUrl;
+      jsBaseATag.target = "_blank";
+      jsBaseATag.appendChild(document.createTextNode(jsBaseLink));
+      jsBaseTag.replaceChild(jsBaseATag, jsBaseTag.firstChild);
+
+      //var jsapiUrl = "http://" + host + ":380/api/demo_umekomi.html";
+      //var jsApiTag = document.getElementById("jsapiLink");
+      //var jsApiLink = jsApiTag.firstChild.nodeValue;
+      //var jsApiATag = document.createElement("a");
+      //jsApiATag.href = jsapiUrl;
+      //jsApiATag.target = "_blank";
+      //jsApiATag.appendChild(document.createTextNode(jsApiLink));
+      //jsApiTag.replaceChild(jsApiATag, jsApiTag.firstChild);
+
+      var recieverUrl = "http://" + host + ":380/receiver/demo.html";
+      var recieverTag = document.getElementById("recieverLink");
+      var recieverLink = recieverTag.firstChild.nodeValue;
+      var recieverATag = document.createElement("a");
+      recieverATag.href = recieverUrl;
+      recieverATag.target = "_blank";
+      recieverATag.appendChild(document.createTextNode(recieverLink));
+      recieverTag.replaceChild(recieverATag, recieverTag.firstChild);
+    }
+
+    var userSettings = {
+      "system": ["3000000001", 30001],
+      "admin": ["3000000006", 30003],
+      "admin2": ["3000000014", 30004],
+      "user": ["3000000005", 30005]
+    };
+
+    var terminalSettings = {
+      "terminal_a": "31",
+      "terminal_b": "32",
+      "terminal_other": "33"
+    };
+
+    var imageModeSettings = {
+      "image_mode_true": true,
+      "image_mode_false": false,
+      "image_mode_null": ""
+    };
+
+    function onChangeUser(obj) {
+      var idx = obj.selectedIndex;
+      var value = obj.options[idx].value;
+      var setting = userSettings[value];
+      var inputs = document.getElementsByTagName("input");
+      var radios = document.getElementsByName("tt");
+
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          inputs.terminal_type.value = radios[i].value;
+        }
+      }
+
+      inputs.user_id.value = setting[0];
+      inputs.device_cd.value = setting[1];
+    }
+
+    function onChangeTerminal(obj) {
+      var idx = obj.selectedIndex;
+      var value = obj.options[idx].value;
+      var setting = terminalSettings[value];
+      var inputs = document.getElementsByTagName("input");
+      var radios = document.getElementsByName("tt");
+
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          inputs.terminal_type.value = radios[i].value;
+        }
+      }
+
+      inputs.terminal_type.value = setting;
+    }
+
+    function onChangeImageMode(obj) {
+      var idx = obj.selectedIndex;
+      var value = obj.options[idx].value;
+      var setting = imageModeSettings[value];
+      var inputs = document.getElementsByTagName("input");
+      var radios = document.getElementsByName("tt");
+
+      for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+          inputs.image_mode.value = radios[i].value;
+        }
+      }
+
+      inputs.image_mode.value = setting;
+    }
+
+    function startUp() {
+      var startBtn = document.getElementById("startupButton");
+      var inputs = document.getElementsByTagName("input");
+
+      console.log("user_id=" + inputs.user_id.value);
+      console.log("password=" + inputs.password.value);
+
+
+if(inputs.user_id.value.length==0){
+  alert("user_id未入力");
+  return;
+}
+if(inputs.password.value.length==0){
+  alert("password未入力");
+  return;
+}
+
+      startBtn.textContent = "起動中...";
+      var request;
+      request = {
+        request: {
+          user_id: inputs.user_id.value
+        }
+      };
+      var url = "Startup";
+      execJsonPost(url, request);
+    }
+
+    var xhr = new XMLHttpRequest();
+
+    // post json
+    function execJsonPost(url, json) {
+
+      xhr.open("POST", url);
+      //xhr.onreadystatechange = function(e){
+      //var cur = e.currentTarget;
+      //window.location.href = e.currentTarget.responseURL;
+      //decode
+      //var ret = decodeURI(cur.responseText);
+      //var msg = "status: "+ cur.status + ret;
+      //var resHeaders = xhr.getAllResponseHeaders();
+      //var resHeader = xhr.getResponseHeader("Location");
+      //alert(xhr.readyState + " \n" + resHeaders);
+      //}
+      xhr.onload = function (e) {
+        if (e.currentTarget.responseText.lastIndexOf("{\"IeRedirect\":", 0) === 0) {
+          var ieRedirectJSON = JSON.parse(e.currentTarget.responseText);
+          var ieRedirect = ieRedirectJSON.IeRedirect
+          window.location.href = ieRedirect;
+        } else {
+          window.location.href = e.currentTarget.responseURL;
+        }
+      }
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(json));
+    }
+  </script>
+  <!--
+    <a>user_id</a><input type="text" name="user_id" id="user_id" value="test">
+    <a>edit_flag</a><input type="text" name="edit_flag" id="edit_flag" value="0">
+    <a>ip_address</a><input style="width:90px;" name="ip_address" id="ip_address" value="172.16.54.47">
+    <a>lat</a><input style="width:90px;" name="lat" id="lat" value="34.55492216502709">
+    <a>lon</a><input style="width:90px;" name="lon" id="lon" value="135.59801179383464">
+    <a>zl</a><input style="width:90px;" name="zl" id="zl" value="19">
+    <button class="button" id="startupButton" onclick="startUp()">地図起動（Java版）</button>
+    -->
+  <div class="login_form">
+    <div class="login_form_top">
+      <h1>地図メンテナンスログイン画面</h1>
+      <p>ユーザID、パスワードを入力し「地図起動」ボタンをクリックしてください。</p>
+      <p>※ユーザIDは7桁、パスワードは8桁固定です</p>
+    </div>
+    <div class="login_form_btm">
+      <input type="text" name="user_id" class="input" id="user_id" value="" autocomplete="off" placeholder="ユーザーIDを入力してください"><br>
+      <input type="password" name="password" class="input" id="password" value="" autocomplete="off"  placeholder="パスワードを入力してください"><br>
+      <p></p>
+    </div>
+    <button id="startupButton" class="btn" onclick="startUp()">地図起動</button>
+  </div>
