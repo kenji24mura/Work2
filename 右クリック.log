@@ -1,0 +1,59 @@
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:45 [Violation]'mouseup' handler took 155ms
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:45 FPS=0.04878524734120402
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:45 [Violation]'requestAnimationFrame' handler took 93ms
+WebAPI.js:2000 {methodName: "ifx.parts.facade.JSBaseFacadeListener.addListener", result: "success", value: {…}}
+WebAPI.js:2000 {methodName: "ifx.parts.facade.JSBaseFacadeListener.addListener", result: "success", value: {…}}
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
+WebAPI.js:7212 {"result":null,"message":"検索処理が完了しました","sql":"select lay_no,item_no,item_no2,info_type,info_summery,lay_type,symbol_no,zahyo_x,zahyo_y  from TBWG0001 WHERE ( zahyo_x BETWEEN 135.525090739717 AND 135.5255248792442 ) AND ( zahyo_y BETWEEN 34.6204983496581 AND 34.62086064383725 )  AND ( lay_no='n@100' OR  lay_no='n@101' OR  lay_no='n@102' OR  lay_no='n@103' OR  lay_no='n@104' OR  lay_no='n@106' OR  lay_no='n@105' OR  lay_no='n@109' OR  lay_no='n@2-1' OR  lay_no='n@10-1' OR  lay_no='n@21-1' OR  lay_no='n@22-1' OR  lay_no='n@23-1' OR  lay_no='n@24-1' OR  lay_no='n@28-1' OR  lay_no='n@90' OR  lay_no='n@20-1' ) UNION ALL select  lay_no,item_no,item_no2,info_type,info_summery,lay_type,symbol_no,zahyo_x,zahyo_y   from TBWG0002 WHERE ( zahyo_x BETWEEN 135.525090739717 AND 135.5255248792442 ) AND ( zahyo_y BETWEEN 34.6204983496581 AND 34.62086064383725 )  AND ( lay_no='n@100' OR  lay_no='n@101' OR  lay_no='n@102' OR  lay_no='n@103' OR  lay_no='n@104' OR  lay_no='n@106' OR  lay_no='n@105' OR  lay_no='n@109' OR  lay_no='n@2-1' OR  lay_no='n@10-1' OR  lay_no='n@21-1' OR  lay_no='n@22-1' OR  lay_no='n@23-1' OR  lay_no='n@24-1' OR  lay_no='n@28-1' OR  lay_no='n@90' OR  lay_no='n@20-1' )","data":[{"item_no2":null,"lay_no":"n@2-1","item_no":"021103022167","info_type":2,"info_summery":"{\"水利コード\":\"11S131H 129 \",\"水利種別\":\"11\",\"配管口径\":\"150\",\"部署台数\":\"0\",\"使用可否\":\"0\",\"備考\":\"水利番号:129     \"}","lay_type":1,"symbol_no":1103,"zahyo_x":135.5253077778,"zahyo_y":34.6206794444,"strinfo1":null,"strinfo2":null,"strinfo3":null,"str_zahyo_x":null,"str_zahyo_y":null,"zahyo_cnt":0,"data":null,"update_date":null}]}
+WebAPI.js:7217 len=1
+WebAPI.js:7230 {水利コード: "11S131H 129 ", 水利種別: "11", 配管口径: "150", 部署台数: "0", 使用可否: "0", …}
+WebAPI.js:7721 key=水利番号
+WebAPI.js:7722 value=129     
+WebAPI.js:7523 tmp_data.length=0
+WebAPI.js:7629 <table class='infotable2' id='jufukuinfo' width='430px'><th style='width:125px;'>種別</th><th>名称</th><tr style='cursor: pointer;' onclick='clickInfoDialog(1,0,135.52530776498665,34.6206794551472)'><td>水利関係</td><td>129     </td></tr></table>
+WebAPI.js:7780 n@2-1
+WebAPI.js:7783 水利番号:129     
+WebAPI.js:7790 標準レイヤ処理
+WebAPI.js:7803 https://172.23.29.3:8443/Sample/GetAttributes?layerId=n@2-1&keyValue=11S131H 129 &keyValue2=&keyValue3=&ope_mode=0
+WebAPI.js:7811 {"result":"OK","message":"layerID=n@2-1 keyValue=11S131H 129 ","data":[{"key":"水利コード","value":"11S131H 129 "},{"key":"水利種別","value":"消火栓"},{"key":"使用可否","value":"使用可能"},{"key":"地域断水","value":"使用可能"},{"key":"水利区分","value":"公設"},{"key":"署所コード","value":"240"},{"key":"設置場所","value":"道路"}]}
+WebAPI.js:7843 <table class='infotable2'  width='430px' style='table-layout: fixed;word-break:break-all;'><th style='width:125px;'>項目</th><th>内容</th><tr><td>水利コード</td><td>11S131H 129 </td></tr><tr><td>水利種別</td><td>消火栓</td></tr><tr><td>使用可否</td><td>使用可能</td></tr><tr><td>地域断水</td><td>使用可能</td></tr><tr><td>水利区分</td><td>公設</td></tr><tr><td>署所コード</td><td>240</td></tr><tr><td>設置場所</td><td>道路</td></tr></table>
+WebAPI.js:7849 450
+WebAPI.js:7850 323
+WebAPI.js:8313 clientRect.top=9
+WebAPI.js:8314 clientRect.left=9
+WebAPI.js:8316 top=436.8713234773836
+WebAPI.js:8317 left=503.45421561211526
+WebAPI.js:8330 window width=1920
+WebAPI.js:8331 window height=1007
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
+WebAPI.js:8146 info_dialog2を閉じる
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:45 [Violation]'mouseup' handler took 153ms
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:45 FPS=0.25846471956577927
+WebAPI.js:2000 {methodName: "ifx.parts.facade.JSBaseFacadeListener.addListener", result: "success", value: {…}}
+WebAPI.js:2031 screen_x=623
+WebAPI.js:2032 screen_y=463
+WebAPI.js:2043 c_lon=-43252899.26781978
+WebAPI.js:2044 c_lat=-153263565.62073067
+WebAPI.js:2053 w=1202
+WebAPI.js:2054 h=602
+WebAPI.js:2059 x=22
+WebAPI.js:2060 y=-162
+WebAPI.js:2065 radian=-1.4358195769409732
+WebAPI.js:2066 degree=-82.26640190097714
+(インデックス):1637 {click_mode: "none", lon: -43252899.26781978, lat: -153263565.62073067, data: {…}, methodName: "addListener", …}
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
+WebAPI.js:2078 c_lon=-43252899.26781978
+WebAPI.js:2079 c_lat=-153263565.62073067
+WebAPI.js:2080 p_x=-43255633.68302445
+WebAPI.js:2081 p_y=-153243597.91800526
+WebAPI.js:2086 x2=2734.4152046740055
+WebAPI.js:2087 y2=-19967.70272541046
+WebAPI.js:2092 radian2=-1.434700947021447
+WebAPI.js:2093 degree2=-82.20230912775122
+WebAPI.js:2096 m_angle=0.06409277322592288
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:45 [Violation]'mouseup' handler took 154ms
+WebAPI.js:2000 {methodName: "ifx.parts.facade.JSBaseFacadeListener.addListener", result: "success", value: {…}}
+vender_cmn_BeforeChart-bundle.d224a4a2735423fc3407.js:67 App Log DEBUG -> ifx.parts.facade.JSBaseFacade(JSBaseFacadeCmdManager.js), 【window.webkitを確認】undefined, Array(1)
