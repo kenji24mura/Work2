@@ -1,0 +1,92 @@
+websocket.js:128  WebSocket connection to 'ws://10.50.60.115/socket.io/?EIO=4&transport=websocket&sid=ay0_3jkaNeR6DSsyAADe' failed: Error during WebSocket handshake: Unexpected response code: 400
+createSocket @ websocket.js:128
+app.html:47 focus
+casedetail.riot:1457 事案詳細タブ表示順設定に誤りがあります SUBID:5 TAB_ID:map 表示名:傷病者情報
+casedetail.riot:308 ローディング開始
+casedetail.js:508 init2 実施
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=jian_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.847,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=jian_temp.json
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=suiri_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.847,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=suiri_temp.json
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=kiken_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=kiken_temp.json
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=kojin_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=kojin_temp.json
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=object_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=object_temp.json
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=car_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=car_temp.json
+WebAPI.js:5855 https://10.50.60.110:8443/Sample/ReadJson?jsonfname=todokede_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,https://10.50.60.110:8443/Sample/ReadJson?jsonfname=todokede_temp.json
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,一時レイヤON　START
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:31.848,一時レイヤON　END
+WebAPI.js:638 n@21-1,n@22-1,n@23-1,n@24-1,n@25-1,n@26-1,n@27-1,n@28-1,n@29-1,n@35-1
+WebAPI.js:5818 通常モードです
+casedetail.js:541 mapUtil:setLayer 実施
+mapUtil.js:682 Tue Jul 14 2026 16:40:31 GMT+0900 (日本標準時)WEBGIS:getVisibleLayerList 実施
+vender_cmn_BeforeChart-bundle.b2fbdd82a6327a7ee6eb.js:1 cssWidth=698 cssHeight=622 canvas.width=698 canvas.height=622 antialias=true depthBits=24
+vender_cmn_BeforeChart-bundle.b2fbdd82a6327a7ee6eb.js:1 DPR=1 OES_StandardDerivatives=true bWindows=true bIE=false
+vender_cmn_BeforeChart-bundle.b2fbdd82a6327a7ee6eb.js:1 WebGL Vendor=Google Inc. (Intel) renderer=ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)
+vender_cmn_BeforeChart-bundle.b2fbdd82a6327a7ee6eb.js:1 GlobalVectorSymbols.uploadToGL metafile nm=37 cb=8388608
+vender_cmn_BeforeChart-bundle.b2fbdd82a6327a7ee6eb.js:1 Resizing Glyphs from 0 to 192
+project_base~vender_cmn_BeforeChart-bundle.bf7edac36232d3e14354.js:1 applogStoragePeriodが1未満または整数でないためAppログ削除は行わない
+project_base~vender_cmn_BeforeChart-bundle.bf7edac36232d3e14354.js:1 App Log WARN -> ifx.cmn.util.InitializeFunctions, mapset.jsonで指定されたIDを持つコマンドがありません。, Array(1)
+PostUtilityJSBaseFacade.js:1727 Object
+PostUtilityJSBaseFacade.js:1733 Object
+PostUtilityJSBaseFacade.js:1750 Object
+mapUtil.js:684 Tue Jul 14 2026 16:40:33 GMT+0900 (日本標準時)WEBGIS:getVisibleLayerList 結果
+mapUtil.js:685 WEBGIS:getVisibleLayerList ret.result = success
+mapUtil.js:732 Tue Jul 14 2026 16:40:33 GMT+0900 (日本標準時)WEBGIS:changeVisibleLayers 実施
+WebAPI.js:795 n@21-1
+casedetail.js:543 mapUtil:setLayer 完了
+casedetail.js:551 WEBGIS:addListener:rightClicked 実施
+casedetail.js:649 WEBGIS:addLayerNode 実施
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.738,addCustomizerNodeFromJson
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.738,addCustomizerNodeFromJson
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.738,addCustomizerNodeFromJson
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.738,addCustomizerNodeFromJson
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.738,addCustomizerNodeFromJson
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.739,addCustomizerNodeFromJson
+WebAPI.js:2020 Object
+WebAPI.js:2030 MAX COUNT=0
+casedetail.js:829 WEBGIS:changeView 実施
+casedetail.js:830 WEBGIS:changeView ret.result = success
+WebAPI.js:2020 Object
+casedetail.js:837  Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'lat')
+    at changeView (casedetail.js:837:76)
+    at Object.eval [as 33a869b0-3d3d-4412-9014-ca886b98db42] (WebAPI.js:2032:11)
+    at ifxApiFacadePostUtil._fireFunc (PostUtilityJSBaseFacade.js:225:43)
+    at PostUtilityJSBaseFacade.js:114:14
+WebAPI.js:5868 Object
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.743,addCustomizerNodeFromJson
+casedetail.js:651 WEBGIS:addLayerNode 結果
+casedetail.js:652 WEBGIS:addLayerNode ret.result = success
+casedetail.js:661 WEBGIS:changeVisibleLayer 実施
+casedetail.js:662 WEBGIS:changeVisibleLayer layerId = n@1281
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.776,changeVisibleLayer start:true,n@1281
+WebAPI.js:7698 【WebAPI】2026/07/14 16:40:33.778,changeVisibleLayer end:true,n@1281
+WebAPI.js:775 Object
+casedetail.js:665 WEBGIS:changeVisibleLayer 結果
+casedetail.js:666 WEBGIS:changeVisibleLayer ret.result = success
+casedetail.js:673 WEBGIS:changeVisibleLayer ret.value.folderId = undefined
+casedetail.js:674 WEBGIS:changeVisibleLayer ret.value.isError = undefined
+casedetail.js:675 WEBGIS:changeVisibleLayer ret.value.msg = undefined
+casedetail.js:688 WEBGIS:drawPoints 実施
+WebAPI.js:955 layerId=n@21-1
+WebAPI.js:956 Array(1)
+WebAPI.js:965  Uncaught TypeError: Cannot read properties of undefined (reading 'length')
+    at Object.eval [as 400bdcca-da66-4afe-8a02-19e00bba9010] (WebAPI.js:965:39)
+    at ifxApiFacadePostUtil._fireFunc (PostUtilityJSBaseFacade.js:225:43)
+    at PostUtilityJSBaseFacade.js:114:14
+PostUtilityJSBaseFacade.js:1744 Object
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
