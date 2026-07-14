@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<style>
+  body {
+    background-color: #808080;
+  }
+
+  .login_form {
+    width: 600px;
+    padding: 40px 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: aliceblue;
+    text-align: center;
+  }
+
+  .login_form h1,
+  .login_form p {
+    color: gray;
+    font-weight: 500;
+  }
+
+  .login_form p {
+    font-size: 10px;
+  }
+
+  .input {
+    width: 300px;
+    background: white;
+    font-size: 18px;
+  }
+
+  .btn {
+    width: 200px;
+    position: relative;
+    display: inline-block;
+    background: lawngreen;
+    color: magenta;
+    border-radius: 4px;
+    font-size: 20px;
+  }
+ .label{
+width:200px;
+	}
+</style>
+
+
+
+  <div class="login_form">
+    <div class="login_form_top">
+      <h1>地図メンテナンスログイン画面</h1>
+    </div>
+
+    <input type="text" class="input" name="user_id" id="user_id" value="test"><br>
+    <input type="text" class="input" name="dept_id" id="dept_id" value="test"><br>
+    <input type="hidden" class="input" name="disaster_mode" id="disaster_mode" value="0"><br>
+    <input type="hidden" class="input" name="lat" id="lat" value="34.55492216502709"><br>
+    <input type="hidden" class="input" name="lon" id="lon" value="135.59801179383464"><br>
+    <input type="hidden" class="input" name="zl" id="zl" value="19"><br>
+    <button class="btn" id="startupButton" onclick="startUp()">地図起動</button>
+
+</div>
+<script type="text/javascript" language="javascript">
+
+  window.onload = function () {
+
+    var queryString = window.location.search;
+    const params = new URLSearchParams(queryString);
+
+    m_user_id = params.get('user_id');
+    m_dept_id = params.get('dept_id');
+    m_dizaster_mode = params.get('dizaster_mode');
+    m_lat = params.get('lat');
+    m_lon = params.get('lon');
+    m_zl = params.get('zl');
+
+	document.getElementById("user_id").value=m_user_id;
+	document.getElementById("dept_id").value=m_dept_id;
+	document.getElementById("disaster_mode").value=m_disaster_mode ;
+	document.getElementById("lat").value=m_lat;
+	document.getElementById("lon").value=m_lon;
+	document.getElementById("zl").value=m_zl;
+
+  }
+
+  function startUp() {
+    var request;
+    request = {
+      request: {
+        user_id: document.getElementById("user_id").value,
+        dept_id: document.getElementById("dept_id").value,
+        disaster_mode: document.getElementById("disaster_mode").value,
+        lat: document.getElementById("lat").value,
+        lon: document.getElementById("lon").value,
+	zl:document.getElementById("zl").value
+      }
+    };
+    var url = "Startup";
+    execJsonPost(url, request);
+  }
+
+  var xhr = new XMLHttpRequest();
+
+  // post json
+  function execJsonPost(url, json) {
+
+    xhr.open("POST", url);
+    xhr.onload = function (e) {
+      if (e.currentTarget.responseText.lastIndexOf("{\"IeRedirect\":", 0) === 0) {
+        var ieRedirectJSON = JSON.parse(e.currentTarget.responseText);
+        var ieRedirect = ieRedirectJSON.IeRedirect
+        window.location.href = ieRedirect;
+      } else {
+        //window.location.href = e.currentTarget.responseURL;
+        window.open(e.currentTarget.responseURL, '_blank');
+
+        var en = function () {
+          window.close();
+        }
+        setTimeout(en, 1000);
+        //window.close();
+      }
+    }
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(json));
+  }
+
+</script>
+</html>
