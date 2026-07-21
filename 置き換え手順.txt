@@ -1,0 +1,3 @@
+D:\FLOEX_NAVI_APP\IICMW\bin をバックアップ
+
+更新モジュールをD:\FLOEX_NAVI_APP\IICMW\binにコピー
